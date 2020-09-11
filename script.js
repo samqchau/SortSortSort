@@ -3,7 +3,7 @@ const arrayDiv = document.querySelector('.array');
 let array = [];
 const sortSelector = document.querySelector('.sort-selector');
 let childNodesArray;
-let time = 30;
+let time = 3;
 
 
 const generateArrayButton = document.querySelector('.generate-array-button');
@@ -20,7 +20,32 @@ let green = '#c0ff01';//green
 let purple = '#bb01ff' //purple
 let white = 'rgb(256,256,256)';
 
+function testing(){ 
+    testSelectionSort();
+}
+
 function generateNewArray(){
+    removeAllChildNodes(arrayDiv);
+    childNodesArray = [];
+    array = [];
+    /*for(let i = 10; i>0; i--){
+        //generate height value
+        let num = (i+1)*10;
+        //create array item div
+        let div = document.createElement('div');
+        //array item div height = height value
+        div.style.height = `${num}px`;
+        //set class array-item on div
+        div.classList.add('array-item');
+        //add height value to array
+        array.push(num);
+        //append array item to .array
+        arrayDiv.appendChild(div);
+        childNodesArray = arrayDiv.childNodes;
+    }
+    sortButton.disabled = false;*/
+
+    
     //remove all children from .array div
     removeAllChildNodes(arrayDiv);
     childNodesArray = [];
@@ -43,6 +68,7 @@ function generateNewArray(){
     }
     childNodesArray = arrayDiv.childNodes;
     sortButton.disabled = false;
+    
 }
 
 function randomNumberInRange(min, max) {
@@ -53,60 +79,6 @@ function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
-}
-
-function selectionSort(arr){
-    //sortButton.disabled = true;
-    console.log(arr);
-    let animations = [];
-    let len = arr.length;
-    let minIndex;
-    let temp;
-    let min;
-
-    //for every element in the array
-    for(let i = 0; i < len; i++){
-        minIndex = i;
-        //turn every bar except the ones we have passed white
-        animations.push(function(){
-            for(let k = i; k < childNodesArray.length; k++){
-                childNodesArray[k].style.backgroundColor = white;
-            }
-        });
-
-        //turn the ith bar red indicating comparison
-        animations.push(function(){childNodesArray[i].style.backgroundColor = red;});
-        for(let j = i+1; j < len; j++){
-            //turn every jth bar purple indicating it has been passed
-            animations.push(function(){childNodesArray[j].style.backgroundColor = purple;});
-            if(arr[j] < arr[minIndex]){
-                if(minIndex !== i){
-                    //animations.push(function(){childNodesArray[minIndex].style.backgroundColor = white;});
-                }
-                minIndex = j;
-                min = arr[j];
-                //animations.push(function(){childNodesArray[minIndex].style.backgroundColor = red;});
-            }
-        }
-
-        if(minIndex !== i){
-            temp = arr[i];            
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
-        }
-        console.log(`minIndex: ${minIndex}, arr[minIndex]: ${arr[minIndex]}`);
-        //turn the ith bar green indicating it is now correct
-        animations.push(function(){
-            childNodesArray[i].style.height = `${arr[i]}px`;
-            //childNodesArray[minIndex].style.height = `${arr[minIndex]}px`;
-        });
-        animations.push(function(){childNodesArray[i].style.backgroundColor = green;});
-    }
-    
-    for(let i = 0; i < animations.length; i++){
-        setTimeout(()=>animations[i](),time*i);
-    }
-    sortButton.disabled = false;
 }
 
 function sort(){
@@ -131,6 +103,68 @@ function sort(){
     }
 }
 
-function testing(){ 
-    testSelectionSort();
+function selectionSort(arr){
+    //sortButton.disabled = true;
+    console.log(arr);
+    let animations = [];
+    let len = arr.length;
+    let temp;
+
+
+    //for every element in the array
+    for(let i = 0; i < len; i++){
+        let minIndex = i;
+        //turn every bar except the ones we have passed white
+        animations.push(function(){
+            for(let k = i; k < childNodesArray.length; k++){
+                childNodesArray[k].style.backgroundColor = white;
+            }
+        });
+
+        //turn the ith bar red indicating comparison
+        animations.push(function(){childNodesArray[i].style.backgroundColor = red;});
+        for(let j = i+1; j < len; j++){
+            //turn every jth bar purple indicating it has been passed
+            let newMinIndex = minIndex;
+            animations.push(function(){childNodesArray[j].style.backgroundColor = purple;});
+
+            if(arr[j] < arr[newMinIndex]){
+                if(newMinIndex !== i){                    
+                    
+                    let colorChange = j;
+                    newMinIndex = j;
+                    colorChange = j;
+                    animations.push(function(){childNodesArray[colorChange].style.backgroundColor = red;});
+                }
+                //newMinIndex = j;
+                minIndex = j;
+
+            }
+        }
+
+        if(minIndex !== i){
+            for(let i = 0; i < 200; i++){
+                animations.push(function(){childNodesArray[minIndex].style.backgroundColor = green;});
+            }
+            temp = arr[i];            
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+        }
+
+        //turn the ith bar green indicating it is now correct
+        animations.push(function(){
+            let tempHeight = childNodesArray[i].offsetHeight;
+            childNodesArray[i].style.height = `${arr[i]}px`;
+            childNodesArray[minIndex].style.height = `${tempHeight}px`;
+            /*
+            childNodesArray[i].style.height = `${arr[i]}px`;
+            childNodesArray[minIndex].style.height = `${arr[minIndex]}px`;*/
+        });
+        animations.push(function(){childNodesArray[i].style.backgroundColor = green;});
+    }
+    
+    for(let i = 0; i < animations.length; i++){
+        setTimeout(()=>animations[i](),time*i);
+    }
+    sortButton.disabled = false;
 }
