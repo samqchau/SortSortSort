@@ -1,9 +1,12 @@
-const numberOfArrayItems = 50;
+const numberOfArrayItems = 100;
 const arrayDiv = document.querySelector('.array');
 let array = [];
+let animations = [];
 const sortSelector = document.querySelector('.sort-selector');
 let childNodesArray;
-let time = 5;
+let time;
+let auxArray = [];
+let numsIndexObj = {};
 
 
 const generateArrayButton = document.querySelector('.generate-array-button');
@@ -21,13 +24,11 @@ let purple = '#bb01ff' //purple
 let white = 'rgb(256,256,256)';
 
 function testing(){ 
-    array = mergeSort(array);
-    /*console.log(array);
-    childNodesArray.map(function(childNode, index){
-        childNode.style.height = `${array[index]}px`;
-    });*/
+    
 }
 
+
+/*
 function shiftNewElement(){
     let div = document.createElement('div');
     div.classList.add('array-item');
@@ -36,6 +37,7 @@ function shiftNewElement(){
     childNodesArray = arrayDiv.childNodes;
     console.log(childNodesArray);
 }
+*/
 
 function generateNewArray(){
     
@@ -69,6 +71,7 @@ function generateNewArray(){
     childNodesArray = [];
     //empty array
     array = [];
+    auxArray = [];
 
     for(let i = 0; i < numberOfArrayItems; i++){
         //generate height value
@@ -81,13 +84,17 @@ function generateNewArray(){
         div.classList.add('array-item');
         //add height value to array
         array.push(num);
+        //add indices to aux array
+        auxArray.push(i);
         //append array item to .array
         arrayDiv.appendChild(div);
     }
+    //add array and auxArray to numsIndexObj
+    numsIndexObj.nums = array;
+    numsIndexObj.indexArray = auxArray;
     childNodesArray = arrayDiv.childNodes;
     childNodesArray = Array.from(childNodesArray);
     sortButton.disabled = false;
-    
 }
 
 function randomNumberInRange(min, max) {
@@ -115,7 +122,7 @@ function sort(){
     }
 
     if(sortSelector.value === 'merge'){
-        console.log('merge sort');
+        mergeSortHelper();
     }
 
     if(sortSelector.value === 'heap'){
@@ -127,10 +134,16 @@ function sort(){
     }
 }
 
+function animateAnimationsArray(animArray) {
+    for(let i = 0; i < animArray.length; i++){
+        setTimeout(()=>animArray[i](),time*i);
+    }
+}
+
 function selectionSort(arr){
     sortButton.disabled = true;
-    time = 3;
-    let animations = [];
+    time = .5;
+    animations = [];
     let len = arr.length;
     let temp;
 
@@ -167,7 +180,7 @@ function selectionSort(arr){
         }
 
         if(minIndex !== i){
-            for(let i = 0; i < 200; i++){
+            for(let i = 0; i < 100; i++){
                 animations.push(function(){childNodesArray[minIndex].style.backgroundColor = green;});
             }
             temp = arr[i];            
@@ -191,19 +204,13 @@ function selectionSort(arr){
     animateAnimationsArray(animations);
 }
 
-function animateAnimationsArray(animArray) {
-    for(let i = 0; i < animArray.length; i++){
-        setTimeout(()=>animArray[i](),time*i);
-    }
-}
-
 function bubbleSort(arr){
-    let animations = [];
+    animations = [];
     let len = arr.length;
     let tempArrSwap;
     let tempChildNodeHeightSwap;
     let k = 0;
-    time = 6;
+    time = .7;
 
     generateArrayButton.disabled = true;
     sortButton.disabled = true;
@@ -284,9 +291,8 @@ function insertionSort(arr){
         Animations
     */
     let len = arr.length;
-    let animations = [];
-
-    time = 30;
+    animations = [];
+    time = 5;
     animations.push(function(){
         generateArrayButton.disabled = true;
         sortButton.disabled = true;
@@ -371,35 +377,116 @@ function insertionSort(arr){
     animateAnimationsArray(animations);
 }
 
-function mergeSort(arr){
-    if(arr.length < 2){
-        return arr;
+function mergeSort(obj){
+
+    if(obj.nums.length < 2){
+        return obj;
     }
 
-    let mid = Math.floor(arr.length/2);
-    let left = mergeSort(arr.slice(0,mid));
-    let right = mergeSort(arr.slice(mid));
+    let mid = Math.floor(obj.nums.length/2);
+
+    let leftNums = obj.nums.slice(0,mid);
+    let leftIndices = obj.indexArray.slice(0,mid);
+    let leftObj = {nums: leftNums, indexArray: leftIndices};
+
+    let rightNums = obj.nums.slice(mid);
+    let rightIndices = obj.indexArray.slice(mid);
+    let rightObj = {nums: rightNums, indexArray: rightIndices};
+
+    let left = mergeSort(leftObj);
+    let right = mergeSort(rightObj);
 
     return merge(left,right);
 }
 
 function merge(arr1, arr2){
-    let result = [];
-    while(arr1.length > 0 && arr2.length > 0){
-        if(arr1[0] < arr2[0]){
-            result.push(arr1.shift());
-        } else{
-            result.push(arr2.shift());
+    let resultNums = [];
+    let resultIndices = [];
+
+    let arr1Nums = arr1.nums;
+    let arr2Nums = arr2.nums;
+    let arr1Indices = arr1.indexArray;
+    let arr2Indices = arr2.indexArray;
+    let loopNumber = 0;
+
+    time = 10;
+
+    animations.push(function(){
+        for(let i = 0; i < arr2.indexArray.length; i++){
+            let index = arr2Indices[i];
+            childNodesArray[index].style.backgroundColor = red;
         }
+    })
+
+    while(arr1Nums.length > 0 && arr2Nums.length > 0){
+        if(arr1Nums[0] < arr2Nums[0]){
+            resultNums.push(arr1Nums.shift());
+        } else{
+            resultNums.push(arr2Nums.shift());
+        }
+
+        if(arr1Indices[0] < arr2Indices[0]){
+            resultIndices.push(arr1Indices.shift());
+        } else{
+            resultIndices.push(arr2Indices.shift());            
+        }
+
+        let num = resultIndices[loopNumber];
+        let height = resultNums[loopNumber];
+
+        animations.push(function(){
+            childNodesArray[num].style.height = `${height}px`;
+        })
+
+        let heightMap = resultNums.concat(arr1Nums.concat(arr2Nums));
+        let indexMap = resultIndices.concat(arr1Indices.concat(arr2Indices));
+        animations.push(function(){
+            for(let i = 0; i < heightMap.length; i++){
+                childNodesArray[indexMap[i]].style.height = `${heightMap[i]}px`;
+            }
+        })
+        loopNumber++;
     }
 
-    let bool = arr1.length;
-    if(bool){
-        result = result.concat(arr1);
+    let numsBool = arr1Nums.length;
+    if(numsBool){
+        resultNums = resultNums.concat(arr1Nums);
     } else{
-        result = result.concat(arr2);
+        resultNums = resultNums.concat(arr2Nums);
     }
+    let indicesBool = arr1Indices.length;
+    if(indicesBool){
+        resultIndices = resultIndices.concat(arr1Indices);
+    } else{
+        resultIndices = resultIndices.concat(arr2Indices);
+    }
+
+    animations.push(function(){
+        for(let i = 0; i < resultIndices.length; i++){
+            let index = resultIndices[i];
+            let value = resultNums[i];
+            childNodesArray[index].style.height = `${value}px`;
+        }
+    })
+
+
+    let result = {nums: resultNums, indexArray: resultIndices};
     return result;
+}
+
+function mergeSortHelper(){
+    animations = [];
+    animations.push(function(){sortButton.disabled = true;});
+    animations.push(function(){generateArrayButton.disabled = true;});
+    array = mergeSort(numsIndexObj).nums;
+    animations.push(function(){
+        for(let i = 0; i < childNodesArray.length; i++){
+            childNodesArray[i].style.backgroundColor = green;
+        }
+    })
+    animations.push(function(){sortButton.disabled = false;});
+    animations.push(function(){generateArrayButton.disabled = false;});
+    animateAnimationsArray(animations);
 }
 
 generateNewArray();
