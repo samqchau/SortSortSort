@@ -11,8 +11,8 @@ let numsIndexObj = {};
 
 const generateArrayButton = document.querySelector('.generate-array-button');
 generateArrayButton.addEventListener('click', generateNewArray);
-const testButton = document.querySelector('.test-button');
-testButton.addEventListener('click', testing);
+//const testButton = document.querySelector('.test-button');
+//testButton.addEventListener('click', testing);
 const sortButton = document.querySelector('.sort-button');
 sortButton.addEventListener('click', sort);
 sortButton.disabled = true;
