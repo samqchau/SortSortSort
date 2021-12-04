@@ -1,73 +1,74 @@
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html, body{
-    height: 100%;
-    width: 100%;
-    background-color: black;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: black;
 }
 
-.grid-container{
-    display: grid;
-    grid-template-rows: 1fr 8fr 1fr;
-    grid-template-columns: 1fr 8fr 1fr;
-    grid-template-areas:
+.grid-container {
+  display: grid;
+  grid-template-rows: 1fr 8fr 1fr;
+  grid-template-columns: 1fr 8fr 1fr;
+  grid-template-areas:
     '. buttons .'
     'array array array'
     'array array array';
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
-.button-container{
-    display: flex;
-    grid-area: buttons;
-    border: 2px solid white;
-    height: 100%;
-    padding: 10px;
-    justify-content: center;
-    align-content: flex-start;
-    align-items: center;
-    margin-top: 10px;
+.button-container {
+  display: flex;
+  grid-area: buttons;
+  border: 2px solid white;
+  height: 100%;
+  padding: 10px;
+  justify-content: center;
+  align-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
 }
 
-.array-container{
-    display: flex;
-    grid-area: array;
-    height: 100%;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
+.array-container {
+  display: flex;
+  grid-area: array;
+  height: 100%;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
-.array{
-    height: 90%;
-    width: 90%;
-    background-color: black;
-    align-self: center;
-    border: 2px solid white;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-flow: nowrap;
-    align-content: flex-end;
-    align-items: flex-end;
+.array {
+  height: 90%;
+  width: 90%;
+  background-color: black;
+  align-self: center;
+  border: 2px solid white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-flow: nowrap;
+  align-content: flex-end;
+  align-items: flex-end;
 }
 
-.array-item{
-    background-color: white; 
-    width: 8px;
-    border: 1px solid purple;
+.array-item {
+  background-color: white;
+  width: 8px;
+  border: 1px solid purple;
 }
 
-button{
-    padding: 2px;
-    height: 20px;
+button {
+  padding: 2px;
+  height: 20px;
 }
 
-select{
-    height: 20px;
+select {
+  height: 20px;
 }
