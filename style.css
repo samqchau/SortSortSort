@@ -27,7 +27,7 @@ body {
   display: flex;
   grid-area: buttons;
   border: 2px solid white;
-  height: fit-content;
+  height: 40px;
   padding: 10px;
   justify-content: center;
   align-content: flex-start;
