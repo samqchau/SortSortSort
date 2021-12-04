@@ -33,12 +33,13 @@ body {
   align-content: flex-start;
   align-items: center;
   margin-top: 10px;
+  margin-bottom: 16px;
 }
 
 .array-container {
   display: flex;
   grid-area: array;
-  height: 100%;
+  height: fit-content;
   justify-content: center;
   align-content: center;
   align-items: center;
